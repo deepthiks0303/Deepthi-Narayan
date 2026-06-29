@@ -21,6 +21,12 @@ function doLogin(){
   const u=document.getElementById('login-email').value;
   const p=document.getElementById('login-pass').value;
   if(!u||!p){alert('Please enter credentials');return;}
+  
+  const nameFromEmail = u.split('@')[0].replace(/[._-]/g, ' ');
+  emp.name = nameFromEmail.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'New User';
+  emp.email = u.includes('@') ? u : u + '@company.com';
+  if(u.toUpperCase().startsWith('EMP')) emp.id = u.toUpperCase();
+  
   document.getElementById('login-page').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
   updateTopbarAvatar();
@@ -61,11 +67,28 @@ function navigate(page){
   document.querySelectorAll(`[data-page="${page}"]`).forEach(n=>n.classList.add('active'));
 }
 
+let punchedIn = false;
+let punchTime = '';
+
+window.doPunchIn = function() {
+  punchedIn = true;
+  punchTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  alert('Virtual Punch In successful at ' + punchTime);
+  navigate('dashboard');
+};
+
 function dashPage(){
   const today=new Date().toDateString();
+  const punchBtn = punchedIn 
+    ? `<button class="btn-secondary" disabled style="opacity:0.8;cursor:not-allowed">✅ Punched In (${punchTime})</button>`
+    : `<button class="btn-primary" onclick="doPunchIn()">👆 Virtual Punch In</button>`;
+
   return `
   <div class="page-header"><div class="breadcrumb">Home › <span>Dashboard</span></div>
-  <h1>Welcome back, ${emp.name.split(' ')[0]} 👋</h1><p>Today is ${today}</p></div>
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div><h1>Welcome back, ${emp.name.split(' ')[0]} 👋</h1><p>Today is ${today}</p></div>
+    <div>${punchBtn}</div>
+  </div></div>
   <div class="grid-4 mb-4">
     <div class="stat-card"><div class="stat-icon" style="background:rgba(79,70,229,.2)">🌿</div><div><div class="stat-val">12</div><div class="stat-label">Leave Balance</div></div></div>
     <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,.2)">✅</div><div><div class="stat-val">96%</div><div class="stat-label">Attendance This Month</div></div></div>
