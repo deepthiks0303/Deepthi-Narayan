@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sahayog Portal – Employee Self-Service</title>
+  <meta name="description" content="Sahayog Employee Self-Service Portal – manage leaves, attendance, requests, reimbursements and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="login-page" class="login-page">
+  <div class="login-bg-anim"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">S</div>
+      <span class="logo-text">Sahayog Portal</span>
+    </div>
+    <h2>Welcome Back</h2>
+    <p class="login-sub">Sign in to your employee account</p>
+    <div class="form-group">
+      <label>Employee ID / Email</label>
+      <input id="login-email" type="text" placeholder="e.g. EMP4517 or you@company.com" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input id="login-pass" type="password" placeholder="••••••••" />
+    </div>
+    <button class="btn-primary full-width" onclick="doLogin()">Sign In</button>
+    <p class="login-footer">Having trouble? <a href="#">Contact IT Support</a></p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="app hidden">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" id="sidebar-toggle-btn">☰</button>
+      <div class="portal-brand">
+        <div class="logo-icon sm">S</div>
+        <span>Sahayog Portal</span>
+      </div>
+    </div>
+    <div class="topbar-center">
+      <div class="search-wrap">
+        <input type="text" placeholder="Search menu, employee, request…" id="global-search" oninput="globalSearch(this.value)" />
+        <span class="search-icon">🔍</span>
+        <div class="search-results" id="search-results"></div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" title="Notifications" onclick="toggleNotifs()">🔔<span class="badge" id="notif-badge">3</span></button>
+      <button class="icon-btn" title="Messages">✉️</button>
+      <div class="avatar-wrap" onclick="navigate('profile')">
+        <div class="avatar">KD</div>
+        <span class="avatar-name">K S Deepthi</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- NOTIFICATION PANEL -->
+  <div class="notif-panel hidden" id="notif-panel">
+    <div class="notif-header">Notifications <button onclick="toggleNotifs()">✕</button></div>
+    <div class="notif-item unread"><span>🟢</span> Your leave request was approved</div>
+    <div class="notif-item unread"><span>🔴</span> Attendance punch missing – Jun 27</div>
+    <div class="notif-item unread"><span>🟡</span> Reimbursement ₹1,200 processed</div>
+    <div class="notif-item"><span>⚪</span> Team meeting at 3 PM today</div>
+  </div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+      <ul class="nav-list">
+        <li class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+          <span class="nav-icon">🏠</span><span class="nav-label">Dashboard</span>
+        </li>
+        <li class="nav-item" data-page="profile" onclick="navigate('profile')">
+          <span class="nav-icon">👤</span><span class="nav-label">My Profile</span>
+        </li>
+        <li class="nav-item has-sub" onclick="toggleSub(this)">
+          <span class="nav-icon">🌿</span><span class="nav-label">My Leaves</span><span class="arrow">›</span>
+          <ul class="sub-nav">
+            <li onclick="navigate('leaves-apply')">Apply Leave</li>
+            <li onclick="navigate('leaves-history')">Leave History</li>
+            <li onclick="navigate('leaves-balance')">Leave Balance</li>
+          </ul>
+        </li>
+        <li class="nav-item" data-page="attendance" onclick="navigate('attendance')">
+          <span class="nav-icon">📅</span><span class="nav-label">My Attendance</span>
+        </li>
+        <li class="nav-item has-sub" onclick="toggleSub(this)">
+          <span class="nav-icon">📋</span><span class="nav-label">My Requests</span><span class="arrow">›</span>
+          <ul class="sub-nav">
+            <li onclick="navigate('requests-new')">New Request</li>
+            <li onclick="navigate('requests-history')">Request History</li>
+          </ul>
+        </li>
+        <li class="nav-item has-sub" onclick="toggleSub(this)">
+          <span class="nav-icon">💰</span><span class="nav-label">Reimbursements</span><span class="arrow">›</span>
+          <ul class="sub-nav">
+            <li onclick="navigate('reimburse-claim')">Claim Reimbursement</li>
+            <li onclick="navigate('reimburse-history')">Claim History</li>
+          </ul>
+        </li>
+        <li class="nav-item has-sub" onclick="toggleSub(this)">
+          <span class="nav-icon">🔓</span><span class="nav-label">Separation</span><span class="arrow">›</span>
+          <ul class="sub-nav">
+            <li onclick="navigate('sep-request')">Initiate Separation</li>
+            <li onclick="navigate('sep-status')">Separation Status</li>
+          </ul>
+        </li>
+        <li class="nav-item" data-page="approvals" onclick="navigate('approvals')">
+          <span class="nav-icon">✅</span><span class="nav-label">List All Approvals</span>
+        </li>
+        <li class="nav-item" data-page="team-dashboard" onclick="navigate('team-dashboard')">
+          <span class="nav-icon">👥</span><span class="nav-label">My Team's Dashboard</span>
+        </li>
+        <li class="nav-item" data-page="team-attendance" onclick="navigate('team-attendance')">
+          <span class="nav-icon">📊</span><span class="nav-label">Team Attendance</span>
+        </li>
+        <li class="nav-item" data-page="virtual-attendance" onclick="navigate('virtual-attendance')">
+          <span class="nav-icon">🖥️</span><span class="nav-label">Virtual Attendance</span>
+        </li>
+        <div class="sidebar-section-label">Useful Links</div>
+        <li class="nav-item link-item" onclick="navigate('talk-facility')"><span class="nav-icon">🏢</span><span class="nav-label">Talk to Facility / Admin</span></li>
+        <li class="nav-item link-item" onclick="navigate('talk-payroll')"><span class="nav-icon">💼</span><span class="nav-label">Talk to Payroll</span></li>
+        <li class="nav-item link-item" onclick="navigate('talk-travel')"><span class="nav-icon">✈️</span><span class="nav-label">Talk with Travel Desk</span></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()">⏻ Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="main-content">
+      <!-- Pages injected by JS -->
+    </main>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
