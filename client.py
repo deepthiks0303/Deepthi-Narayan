@@ -47,7 +47,7 @@ async def main():
     # Initialize Google Gemini LLM
     print("\n🤖 Initializing Google Gemini API...")
     model = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+        model="gemini-2.5-flash",
         google_api_key=GEMINI_API_KEY,
         temperature=0.7,
         top_p=0.9
