@@ -74,10 +74,26 @@ async def main():
             chat_history.append({"role": "user", "content": user_input})
             print("Thinking...")
 
-            response = await agent.ainvoke({"messages": chat_history})
-            agent_response = response['messages'][-1].content
-            print(f"\nAgent: {agent_response}")
-            chat_history.append({"role": "assistant", "content": agent_response})
+            # Retry mechanism for transient API errors (e.g. 503 Server Busy)
+            max_retries = 3
+            response = None
+            for attempt in range(max_retries):
+                try:
+                    response = await agent.ainvoke({"messages": chat_history})
+                    break
+                except Exception as e:
+                    if "503" in str(e) and attempt < max_retries - 1:
+                        print(f"⚠️ Model busy (503). Retrying in 2 seconds... (Attempt {attempt + 1}/{max_retries})")
+                        await asyncio.sleep(2)
+                    else:
+                        raise e
+
+            if response:
+                agent_response = response['messages'][-1].content
+                print(f"\nAgent: {agent_response}")
+                chat_history.append({"role": "assistant", "content": agent_response})
+            else:
+                print("\n❌ Error: Failed to get response after retries.")
 
         except KeyboardInterrupt:
             print("\nGoodbye!")
