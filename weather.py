@@ -4,17 +4,6 @@ import json
 
 mcp = FastMCP("Weather")
 
-# Mock weather data - can be replaced with real API calls
-WEATHER_DATA = {
-    "California": "Sunny, 75°F (24°C), Light breeze",
-    "New York": "Cloudy, 68°F (20°C), Moderate wind",
-    "London": "Rainy, 59°F (15°C), Strong wind",
-    "Tokyo": "Partly cloudy, 72°F (22°C), Calm",
-    "Sydney": "Sunny, 77°F (25°C), Light breeze",
-    "India": "Hot and humid, 89°F (32°C), Light wind",
-    "Paris": "Clear, 64°F (18°C), Light breeze",
-}
-
 @mcp.tool()
 async def get_weather(location: str) -> str:
     """Get the weather for a specific location.
@@ -25,10 +14,6 @@ async def get_weather(location: str) -> str:
     Returns:
         Weather information as a string
     """
-
-    # Check if we have data for this location
-    if location in WEATHER_DATA:
-        return f"Weather in {location}: {WEATHER_DATA[location]}"
 
     # Try to get real weather data from Open-Meteo API (free, no API key needed)
     try:

@@ -57,46 +57,33 @@ async def main():
     agent = create_react_agent(model, tools)
 
     print("\n" + "=" * 60)
-    print("📊 Example 1: Math Query")
+    print("💬 Interactive MCP Client Chat Ready! (Type 'quit' or 'exit' to exit)")
     print("=" * 60)
 
-    try:
-        math_response = await agent.ainvoke(
-            {"messages": [{"role": "user", "content": "What is (3 + 5) x 12?"}]}
-        )
-        print(f"\n🧮 Math Response: {math_response['messages'][-1].content}")
-    except Exception as e:
-        print(f"❌ Error in math query: {str(e)}")
-        print("💡 Make sure mathserver.py is running!")
+    chat_history = []
 
-    print("\n" + "=" * 60)
-    print("📊 Example 2: Weather Query")
-    print("=" * 60)
+    while True:
+        try:
+            user_input = input("\nYou: ").strip()
+            if not user_input:
+                continue
+            if user_input.lower() in ["quit", "exit"]:
+                print("Goodbye!")
+                break
 
-    try:
-        weather_response = await agent.ainvoke(
-            {"messages": [{"role": "user", "content": "What is the weather in California?"}]}
-        )
-        print(f"\n🌤️ Weather Response: {weather_response['messages'][-1].content}")
-    except Exception as e:
-        print(f"❌ Error in weather query: {str(e)}")
-        print("💡 Make sure weather.py is running on http://localhost:8000!")
+            chat_history.append({"role": "user", "content": user_input})
+            print("Thinking...")
 
-    print("\n" + "=" * 60)
-    print("📊 Example 3: Combined Query")
-    print("=" * 60)
+            response = await agent.ainvoke({"messages": chat_history})
+            agent_response = response['messages'][-1].content
+            print(f"\nAgent: {agent_response}")
+            chat_history.append({"role": "assistant", "content": agent_response})
 
-    try:
-        combined_response = await agent.ainvoke(
-            {"messages": [{"role": "user", "content": "Calculate 25 + 75 and tell me the sum"}]}
-        )
-        print(f"\n✨ Combined Response: {combined_response['messages'][-1].content}")
-    except Exception as e:
-        print(f"❌ Error in combined query: {str(e)}")
-
-    print("\n" + "=" * 60)
-    print("✅ MCP Client Demo Complete!")
-    print("=" * 60)
+        except KeyboardInterrupt:
+            print("\nGoodbye!")
+            break
+        except Exception as e:
+            print(f"\n❌ Error: {str(e)}")
 
 if __name__ == "__main__":
     asyncio.run(main())
