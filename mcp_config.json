@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "mcp-python-sdk": {
+      "command": "python",
+      "args": [
+        "/path/to/mcp_server.py"
+      ],
+      "env": {
+        "MCP_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
+  }
+}
