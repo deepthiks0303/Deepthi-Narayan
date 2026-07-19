@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "weather-time": {
+      "command": "python",
+      "args": [
+        "-m",
+        "server"
+      ],
+      "env": {}
+    }
+  }
+}
